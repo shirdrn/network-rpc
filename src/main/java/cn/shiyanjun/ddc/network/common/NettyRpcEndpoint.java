@@ -8,7 +8,9 @@ import org.apache.commons.logging.LogFactory;
 import com.google.common.collect.Lists;
 
 import cn.shiyanjun.ddc.api.Context;
+import cn.shiyanjun.ddc.api.LifecycleAware;
 import cn.shiyanjun.ddc.api.common.AbstractEndpoint;
+import cn.shiyanjun.ddc.api.utils.ReflectionUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
@@ -56,6 +58,23 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 			LOG.warn("Catch exception when worker group being shutdown:", e);
 		}
 		
+	}
+	
+	/**
+	 * Create a client/server side Netty RPC endpoint.
+	 * @param endpointClass
+	 * @param context
+	 * @param rpcMessageHandler
+	 * @return
+	 */
+	public static LifecycleAware newEndpoint(Class<? extends NettyRpcEndpoint> endpointClass, Context context, RpcMessageHandler rpcMessageHandler) {
+		final NettyRpcEndpoint endpoint = ReflectionUtils.newInstance(endpointClass, NettyRpcEndpoint.class, context);
+		// configure Netty endpoint
+		endpoint.addChannelHandlers(
+				new RpcMessageDecoder(), 
+				rpcMessageHandler, 
+				new RpcMessageEncoder());
+		return endpoint;
 	}
 
 }

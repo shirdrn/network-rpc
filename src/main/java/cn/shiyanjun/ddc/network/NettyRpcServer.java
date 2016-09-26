@@ -4,13 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.LifecycleAware;
 import cn.shiyanjun.ddc.api.network.MessageListener;
 import cn.shiyanjun.ddc.network.common.NettyRpcEndpoint;
 import cn.shiyanjun.ddc.network.common.RpcMessage;
-import cn.shiyanjun.ddc.network.common.RpcMessageDecoder;
-import cn.shiyanjun.ddc.network.common.RpcMessageEncoder;
-import cn.shiyanjun.ddc.network.common.RpcMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -30,7 +26,7 @@ public class NettyRpcServer extends NettyRpcEndpoint {
 	private final EventLoopGroup bossGroup;
 	private final ServerBootstrap b = new ServerBootstrap();
 	
-	private NettyRpcServer(Context context) {
+	public NettyRpcServer(Context context) {
 		super(context);
 		bossGroup = super.newEventLoopGroup(1);
 	}
@@ -61,21 +57,4 @@ public class NettyRpcServer extends NettyRpcEndpoint {
 		bossGroup.shutdownGracefully();		
 	}
 	
-	/**
-	 * Create a server-side Netty RPC endpoint.
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public static LifecycleAware newServer(Context context, RpcMessageHandler rpcMessageHandler) {
-		final LifecycleAware server = new NettyRpcServer(context);
-		// configure Netty endpoint
-		NettyRpcEndpoint endpoint = (NettyRpcEndpoint) server;
-		endpoint.addChannelHandlers(
-				new RpcMessageDecoder(), 
-				rpcMessageHandler, 
-				new RpcMessageEncoder());
-		return server;
-	}
-
 }

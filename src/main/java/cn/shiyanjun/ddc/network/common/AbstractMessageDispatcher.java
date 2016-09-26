@@ -49,6 +49,11 @@ public abstract class AbstractMessageDispatcher extends AbstractComponent implem
 	}
 	
 	@Override
+	public RunnableMessageListener<RpcMessage> getMessageListener(int messageType) {
+		return listeners.get(messageType);
+	}
+	
+	@Override
 	public void setRpcMessageHandler(RpcMessageHandler rpcMessageHandler) {
 		this.rpcMessageHandler = rpcMessageHandler;
 	}

@@ -7,6 +7,8 @@ public interface MessageDispatcher extends LifecycleAware {
 	void dispatch(RpcMessage message);
 	void register(RunnableMessageListener<RpcMessage> messageListener);
 	
+	RunnableMessageListener<RpcMessage> getMessageListener(int messageType);
+	
 	void setRpcMessageHandler(RpcMessageHandler rpcMessageHandler);
 	RpcMessageHandler getRpcMessageHandler();
 }
