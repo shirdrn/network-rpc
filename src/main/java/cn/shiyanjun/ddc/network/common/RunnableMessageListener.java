@@ -1,11 +1,13 @@
 package cn.shiyanjun.ddc.network.common;
 
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.collect.Queues;
+import com.google.common.collect.Sets;
 
 import cn.shiyanjun.ddc.api.network.MessageListener;
 
@@ -13,19 +15,22 @@ public abstract class RunnableMessageListener<T> implements MessageListener<T>, 
 
 	private static final Log LOG = LogFactory.getLog(RunnableMessageListener.class);
 	private final BlockingQueue<T> q;
-	private final int messageType;
+	private final Set<Integer> messageTypes;
 	
-	public RunnableMessageListener(int messageType) {
+	public RunnableMessageListener(int... messageTypes) {
 		this.q = Queues.newLinkedBlockingQueue();
-		this.messageType = messageType;
+		this.messageTypes = Sets.newHashSet();
+		for(int messageType : messageTypes) {
+			this.messageTypes.add(messageType);
+		}
 	}
 	
 	public void addMessage(T message) {
 		q.add(message);		
 	}
 	
-	public int getMessageType() {
-		return messageType;
+	public Set<Integer> getMessageTypes() {
+		return messageTypes;
 	}
 	
 	@Override

@@ -56,6 +56,7 @@ public class Outbox extends MessageBox<OutboxMessage> {
 								AckMessage ack = new AckMessage(message);
 								ack.setMessageStatus(MessageStatus.SUCCESS);
 								dispatcher.dispatch(ack);
+								break;
 							} catch (TimeoutException e) {
 								retryTimes--;
 								continue;

@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.api.LifecycleAware;
 import cn.shiyanjun.ddc.api.network.RpcAskService;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -18,6 +19,7 @@ public class RpcMessageHandler extends ChannelInboundHandlerAdapter implements L
 	
 	private final Inbox inbox;
 	private final Outbox outbox;
+	private Channel channel;
 	
 	public RpcMessageHandler(Context context, MessageDispatcher dispatcher) {
 		super();
@@ -39,6 +41,7 @@ public class RpcMessageHandler extends ChannelInboundHandlerAdapter implements L
 	@Override
 	public void askWithRetry(RpcMessage request, int timeoutMillis) {
 		OutboxMessage message = new OutboxMessage(request);
+		message.setChannel(channel);
 		message.setTimeoutMillis(timeoutMillis);
 		outbox.collect(message);		
 	}
@@ -66,6 +69,7 @@ public class RpcMessageHandler extends ChannelInboundHandlerAdapter implements L
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		channel = ctx.channel();
 		LOG.info("Endpoint connected: channel=" + ctx.channel());
 	}
 	

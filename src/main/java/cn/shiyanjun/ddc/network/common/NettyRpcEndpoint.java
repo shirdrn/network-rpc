@@ -8,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import com.google.common.collect.Lists;
 
 import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.LifecycleAware;
 import cn.shiyanjun.ddc.api.common.AbstractEndpoint;
 import cn.shiyanjun.ddc.api.utils.ReflectionUtils;
 import io.netty.channel.Channel;
@@ -67,7 +66,7 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 	 * @param rpcMessageHandler
 	 * @return
 	 */
-	public static LifecycleAware newEndpoint(Class<? extends NettyRpcEndpoint> endpointClass, Context context, RpcMessageHandler rpcMessageHandler) {
+	public static NettyRpcEndpoint newEndpoint(Class<? extends NettyRpcEndpoint> endpointClass, Context context, RpcMessageHandler rpcMessageHandler) {
 		final NettyRpcEndpoint endpoint = ReflectionUtils.newInstance(endpointClass, NettyRpcEndpoint.class, context);
 		// configure Netty endpoint
 		endpoint.addChannelHandlers(

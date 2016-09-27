@@ -3,6 +3,8 @@ package cn.shiyanjun.ddc.network;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.common.base.Throwables;
+
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.api.network.MessageListener;
 import cn.shiyanjun.ddc.network.common.NettyRpcEndpoint;
@@ -47,6 +49,7 @@ public class NettyRpcClient extends NettyRpcEndpoint {
             f.channel().closeFuture().sync();
 		} catch (Exception e) {
 			LOG.warn("Fail to start Netty RPC client:", e);
+			Throwables.propagate(e);
 		}
 	}
 	
