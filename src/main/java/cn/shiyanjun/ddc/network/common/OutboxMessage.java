@@ -2,19 +2,10 @@ package cn.shiyanjun.ddc.network.common;
 
 import io.netty.channel.Channel;
 
-public class OutboxMessage extends RpcMessage {
+public class OutboxMessage extends LocalMessage {
 
-	private static final long serialVersionUID = 1L;
 	private transient Channel channel;
 	private transient int timeoutMillis;
-	
-	public OutboxMessage(Long id) {
-		super(id);
-	}
-	
-	public OutboxMessage(RpcMessage message) {
-		super(message);
-	}
 	
 	public Channel getChannel() {
 		return channel;

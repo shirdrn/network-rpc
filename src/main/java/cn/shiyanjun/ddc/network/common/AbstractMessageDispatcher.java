@@ -20,8 +20,8 @@ import cn.shiyanjun.ddc.api.utils.NamedThreadFactory;
 public abstract class AbstractMessageDispatcher extends AbstractComponent implements MessageDispatcher {
 
 	private static final Log LOG = LogFactory.getLog(AbstractMessageDispatcher.class);
-	private final ConcurrentMap<Integer, RunnableMessageListener<RpcMessage>> typedListeners = Maps.newConcurrentMap();
-	private final Set<RunnableMessageListener<RpcMessage>> listenerSet = Sets.newCopyOnWriteArraySet();
+	private final ConcurrentMap<Integer, RunnableMessageListener<LocalMessage>> typedListeners = Maps.newConcurrentMap();
+	private final ConcurrentMap<RunnableMessageListener<LocalMessage>, Set<Integer>> listenerToTypeSet = Maps.newConcurrentMap();
 	private ExecutorService executorService;
 	private RpcMessageHandler rpcMessageHandler;
 	
@@ -30,9 +30,9 @@ public abstract class AbstractMessageDispatcher extends AbstractComponent implem
 	}
 
 	@Override
-	public void dispatch(RpcMessage message) {
+	public void dispatch(LocalMessage message) {
 		if(message != null) {
-			final RunnableMessageListener<RpcMessage> listener = typedListeners.get(message.getType());
+			final RunnableMessageListener<LocalMessage> listener = typedListeners.get(message.getRpcMessage().getType());
 			if(listener != null) {
 				listener.handle(message);
 			} else {
@@ -42,7 +42,7 @@ public abstract class AbstractMessageDispatcher extends AbstractComponent implem
 	}
 	
 	@Override
-	public void register(RunnableMessageListener<RpcMessage> messageListener) {
+	public void register(RunnableMessageListener<LocalMessage> messageListener) {
 		Set<Integer> messageTypes = messageListener.getMessageTypes();
 		for(int messageType : messageTypes) {
 			if(typedListeners.putIfAbsent(messageType, messageListener) == null) {
@@ -50,14 +50,47 @@ public abstract class AbstractMessageDispatcher extends AbstractComponent implem
 			} else {
 				Throwables.propagate(new IllegalStateException("Message listener already registered: type=" + messageType));
 			}
-			if(!listenerSet.contains(messageListener)) {
-				listenerSet.add(messageListener);
+			Set<Integer> types = listenerToTypeSet.get(messageListener);
+			if(types == null) {
+				types = Sets.newHashSet();
+				listenerToTypeSet.putIfAbsent(messageListener, types);
 			}
+			types.add(messageType);
 		}
 	}
 	
 	@Override
-	public RunnableMessageListener<RpcMessage> getMessageListener(int messageType) {
+	public void ask(LocalMessage request) {
+		rpcMessageHandler.ask(request);		
+	}
+	
+	@Override
+	public void askWithRetry(LocalMessage request, int timeoutMillis) {
+		rpcMessageHandler.askWithRetry(request, timeoutMillis);		
+	}
+	
+	@Override
+	public void send(LocalMessage request) {
+		rpcMessageHandler.send(request);		
+	}
+	
+	@Override
+	public void sendWithRetry(LocalMessage request, int timeoutMillis) {
+		rpcMessageHandler.sendWithRetry(request, timeoutMillis);		
+	}
+	
+	@Override
+	public void reply(LocalMessage request) {
+		rpcMessageHandler.reply(request);		
+	}
+	
+	@Override
+	public void replyWithRetry(LocalMessage request, int timeoutMillis) {
+		rpcMessageHandler.replyWithRetry(request, timeoutMillis);		
+	}
+	
+	@Override
+	public RunnableMessageListener<LocalMessage> getMessageListener(int messageType) {
 		return typedListeners.get(messageType);
 	}
 	
@@ -76,10 +109,10 @@ public abstract class AbstractMessageDispatcher extends AbstractComponent implem
 		Preconditions.checkArgument(rpcMessageHandler != null, "RPC message handler not set.");
 		Preconditions.checkArgument(!typedListeners.isEmpty(), "No message listener registered.");
 		executorService = Executors.newCachedThreadPool(new NamedThreadFactory("MESSAGE-LISTENER"));
-		for(final RunnableMessageListener<RpcMessage> listener : listenerSet) {
+		for(final RunnableMessageListener<LocalMessage> listener : listenerToTypeSet.keySet()) {
 			listener.start();
 			executorService.execute(listener);
-			LOG.info("Message listener started: listener=" + listener.getClass().getName());
+			LOG.info("Message listener started: listener=" + listener.getClass().getName() + ", types=" + listenerToTypeSet.get(listener));
 		}
 	}
 	

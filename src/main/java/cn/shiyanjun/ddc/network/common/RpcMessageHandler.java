@@ -6,20 +6,18 @@ import org.apache.commons.logging.LogFactory;
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.api.LifecycleAware;
 import cn.shiyanjun.ddc.api.network.RpcAskService;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 @Sharable
-public class RpcMessageHandler extends ChannelInboundHandlerAdapter implements LifecycleAware, RpcAskService<RpcMessage> {
+public abstract class RpcMessageHandler extends ChannelInboundHandlerAdapter implements LifecycleAware, RpcAskService<LocalMessage> {
 
 	private static final Log LOG = LogFactory.getLog(RpcMessageHandler.class);
 	protected final Context context;
 	
-	private final Inbox inbox;
-	private final Outbox outbox;
-	private Channel channel;
+	protected final Inbox inbox;
+	protected final Outbox outbox;
 	
 	public RpcMessageHandler(Context context, MessageDispatcher dispatcher) {
 		super();
@@ -34,17 +32,36 @@ public class RpcMessageHandler extends ChannelInboundHandlerAdapter implements L
 	}
 	
 	@Override
-	public void ask(RpcMessage request) {
-		askWithRetry(request, 30000);
+	public void ask(LocalMessage request) {
+		askWithRetry(request, 0);
 	}
 
 	@Override
-	public void askWithRetry(RpcMessage request, int timeoutMillis) {
-		OutboxMessage message = new OutboxMessage(request);
-		message.setChannel(channel);
-		message.setTimeoutMillis(timeoutMillis);
-		outbox.collect(message);		
+	public void askWithRetry(LocalMessage request, int timeoutMillis) {
+		sendToRemotePeer(request, true, timeoutMillis);
 	}
+	
+	@Override
+	public void send(LocalMessage request) {
+		sendWithRetry(request, 0);		
+	}
+
+	@Override
+	public void sendWithRetry(LocalMessage request, int timeoutMillis) {
+		sendToRemotePeer(request, false, timeoutMillis);		
+	}
+	
+	@Override
+	public void reply(LocalMessage request) {
+		send(request);		
+	}
+
+	@Override
+	public void replyWithRetry(LocalMessage request, int timeoutMillis) {
+		sendWithRetry(request, timeoutMillis);		
+	}
+	
+	protected abstract void sendToRemotePeer(LocalMessage request, boolean needRelpy, int timeoutMillis);
 	
 	@Override
 	public void stop() {
@@ -69,23 +86,13 @@ public class RpcMessageHandler extends ChannelInboundHandlerAdapter implements L
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		channel = ctx.channel();
 		LOG.info("Endpoint connected: channel=" + ctx.channel());
 	}
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		super.exceptionCaught(ctx, cause);
+		ctx.channel().close();
 	}
 	
-	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if(msg instanceof RpcMessage) {
-			RpcMessage m = (RpcMessage) msg;
-			InboxMessage message = new InboxMessage(m);
-			message.setChannel(ctx.channel());
-			inbox.collect(message);
-		}
-	}
-
 }

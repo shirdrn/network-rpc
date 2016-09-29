@@ -1,5 +1,7 @@
 package cn.shiyanjun.ddc.network.common;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.shiyanjun.ddc.api.common.AbstractMessage;
 
 public class RpcMessage extends AbstractMessage<String> {
@@ -26,8 +28,16 @@ public class RpcMessage extends AbstractMessage<String> {
 		super(id, type);
 	}
 	
+	public JSONObject toJSONString() {
+		JSONObject o = new JSONObject(true);
+		o.put("id", id);
+		o.put("type", type);
+		o.put("body", JSONObject.parse(body));
+		return o;
+	}
+	
 	@Override
 	public String toString() {
-		return "id=" + id + ", type=" + type + ", body=" + body;
+		return toJSONString().toString();
 	}
 }

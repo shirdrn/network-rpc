@@ -1,7 +1,6 @@
 package cn.shiyanjun.ddc.network.common;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.awt.TrayIcon.MessageType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.network.constants.MessageStatus;
 import cn.shiyanjun.ddc.network.constants.RpcConstants;
-import io.netty.channel.ChannelFuture;
 
 public class Outbox extends MessageBox<OutboxMessage> {
 
@@ -41,34 +39,36 @@ public class Outbox extends MessageBox<OutboxMessage> {
 				try {
 					message = messageBox.take();
 					if(message != null) {
-						int timeout = askTimeout;
-						if(message.getTimeoutMillis() > 0) {
-							timeout = message.getTimeoutMillis();
-						}
+						message.getChannel().writeAndFlush(message);
 						
-						ChannelFuture future = null;
-						int retryTimes = askRetryTimes + 1;
-						while(retryTimes > 0) {
-							try {
-								future = message.getChannel().writeAndFlush(message);
-								future.get(timeout, TimeUnit.MILLISECONDS);
-								// notify message sent
-								AckMessage ack = new AckMessage(message);
-								ack.setMessageStatus(MessageStatus.SUCCESS);
-								dispatcher.dispatch(ack);
-								break;
-							} catch (TimeoutException e) {
-								retryTimes--;
-								continue;
-							}
-						}
+//						int timeout = askTimeout;
+//						if(message.getTimeoutMillis() > 0) {
+//							timeout = message.getTimeoutMillis();
+//						}
+//						
+//						ChannelFuture future = null;
+//						int retryTimes = askRetryTimes + 1;
+//						while(retryTimes > 0) {
+//							try {
+//								future = message.getChannel().writeAndFlush(message);
+//								future.get(timeout, TimeUnit.MILLISECONDS);
+//								// notify message sent
+//								AckMessage ack = new AckMessage(message);
+//								ack.setMessageStatus(MessageStatus.SUCCESS);
+//								dispatcher.dispatch(ack);
+//								break;
+//							} catch (TimeoutException e) {
+//								retryTimes--;
+//								continue;
+//							}
+//						}
 					}
 				} catch (Exception e) {
-					LOG.info("Fail to send message: " + message, e);
+					LOG.warn("Fail to send message: " + message, e);
 					if(message != null) {
-						AckMessage ack = new AckMessage(message);
-						ack.setMessageStatus(MessageStatus.FAILURE);
-						dispatcher.dispatch(ack);
+//						SentAckMessage ack = new SentAckMessage(message);
+//						ack.setMessageStatus(MessageStatus.FAILURE);
+//						dispatcher.dispatch(ack);
 					}
 				}
 			}

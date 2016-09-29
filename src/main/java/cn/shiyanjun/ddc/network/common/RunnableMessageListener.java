@@ -42,7 +42,7 @@ public abstract class RunnableMessageListener<T> implements MessageListener<T>, 
 				handle(message);
 			} catch (Exception e) {
 				if(message != null) {
-					LOG.warn("Fail to process message: " + message);
+					LOG.warn("Fail to process message: " + message, e);
 				}
 			}
 		}

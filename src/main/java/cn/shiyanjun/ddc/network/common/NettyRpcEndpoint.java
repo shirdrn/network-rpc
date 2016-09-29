@@ -15,6 +15,8 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 
@@ -70,9 +72,9 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 		final NettyRpcEndpoint endpoint = ReflectionUtils.newInstance(endpointClass, NettyRpcEndpoint.class, context);
 		// configure Netty endpoint
 		endpoint.addChannelHandlers(
-				new RpcMessageDecoder(), 
+				new ObjectDecoder(Class::forName), 
 				rpcMessageHandler, 
-				new RpcMessageEncoder());
+				new ObjectEncoder());
 		return endpoint;
 	}
 
