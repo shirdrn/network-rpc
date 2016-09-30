@@ -1,7 +1,5 @@
 package cn.shiyanjun.ddc.network.common;
 
-import com.alibaba.fastjson.JSONObject;
-
 import io.netty.channel.Channel;
 
 public class LocalMessage {

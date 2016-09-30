@@ -1,12 +1,9 @@
 package cn.shiyanjun.ddc.network.common;
 
-import java.awt.TrayIcon.MessageType;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.network.constants.MessageStatus;
 import cn.shiyanjun.ddc.network.constants.RpcConstants;
 
 public class Outbox extends MessageBox<OutboxMessage> {
@@ -39,8 +36,8 @@ public class Outbox extends MessageBox<OutboxMessage> {
 				try {
 					message = messageBox.take();
 					if(message != null) {
-						message.getChannel().writeAndFlush(message);
-						
+						message.getChannel().writeAndFlush(message.getRpcMessage());
+						LOG.debug("Rpc message sent: rpcMessage=" + message.getRpcMessage());
 //						int timeout = askTimeout;
 //						if(message.getTimeoutMillis() > 0) {
 //							timeout = message.getTimeoutMillis();

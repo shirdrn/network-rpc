@@ -6,7 +6,7 @@ import cn.shiyanjun.ddc.api.common.AbstractMessage;
 
 public class RpcMessage extends AbstractMessage<String> {
 
-	private static final long serialVersionUID = -503554980049643194L;
+	private static final long serialVersionUID = 1L;
 
 	public RpcMessage() {
 		super();
@@ -20,10 +20,6 @@ public class RpcMessage extends AbstractMessage<String> {
 		this.body = message.body;
 	}
 	
-	public RpcMessage(Long id) {
-		super(id);
-	}
-
 	public RpcMessage(Long id, int type) {
 		super(id, type);
 	}
@@ -32,7 +28,9 @@ public class RpcMessage extends AbstractMessage<String> {
 		JSONObject o = new JSONObject(true);
 		o.put("id", id);
 		o.put("type", type);
+		o.put("needReply", needReply);
 		o.put("body", JSONObject.parse(body));
+		o.put("timestamp", timestamp);
 		return o;
 	}
 	
