@@ -14,12 +14,10 @@ import cn.shiyanjun.ddc.api.network.MessageListener;
 public abstract class RunnableMessageListener<T> implements MessageListener<T>, Runnable {
 
 	private static final Log LOG = LogFactory.getLog(RunnableMessageListener.class);
-	private final BlockingQueue<T> q;
-	private final Set<Integer> messageTypes;
+	private final BlockingQueue<T> q = Queues.newLinkedBlockingQueue();
+	private final Set<Integer> messageTypes = Sets.newHashSet();;
 	
 	public RunnableMessageListener(int... messageTypes) {
-		this.q = Queues.newLinkedBlockingQueue();
-		this.messageTypes = Sets.newHashSet();
 		for(int messageType : messageTypes) {
 			this.messageTypes.add(messageType);
 		}

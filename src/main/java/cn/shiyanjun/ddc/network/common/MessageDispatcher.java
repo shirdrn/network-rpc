@@ -1,16 +1,15 @@
 package cn.shiyanjun.ddc.network.common;
 
 import cn.shiyanjun.ddc.api.LifecycleAware;
-import cn.shiyanjun.ddc.api.network.RpcAskService;
 
-public interface MessageDispatcher extends LifecycleAware, RpcAskService<LocalMessage> {
+public interface MessageDispatcher extends LifecycleAware {
 
-	void dispatch(LocalMessage message);
-	void register(RunnableMessageListener<LocalMessage> messageListener);
+	void dispatch(PeerMessage message);
+	void register(RunnableMessageListener<PeerMessage> messageListener);
 	
-	RunnableMessageListener<LocalMessage> getMessageListener(int messageType);
+	RunnableMessageListener<PeerMessage> getMessageListener(int messageType);
 	
-	void setRpcMessageHandler(RpcMessageHandler rpcMessageHandler);
-	RpcMessageHandler getRpcMessageHandler();
+	void setRpcService(RpcService rpcService);
+	RpcService getRpcService();
 	
 }

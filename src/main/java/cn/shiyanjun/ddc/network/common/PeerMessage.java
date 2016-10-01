@@ -1,8 +1,10 @@
 package cn.shiyanjun.ddc.network.common;
 
+import com.google.common.base.Preconditions;
+
 import io.netty.channel.Channel;
 
-public class LocalMessage {
+public class PeerMessage {
 
 	private String fromEndpointId;
 	private String toEndpointId;
@@ -35,6 +37,7 @@ public class LocalMessage {
 	}
 	@Override
 	public String toString() {
+		Preconditions.checkArgument(rpcMessage != null, "RPC message not set.");
 		return rpcMessage.toString();
 	}
 	

@@ -2,7 +2,7 @@ package cn.shiyanjun.ddc.network.common;
 
 import io.netty.channel.Channel;
 
-public class OutboxMessage extends LocalMessage {
+public class OutboxMessage extends PeerMessage {
 
 	private transient Channel channel;
 	private transient int timeoutMillis;

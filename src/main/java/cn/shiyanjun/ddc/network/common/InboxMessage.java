@@ -2,7 +2,7 @@ package cn.shiyanjun.ddc.network.common;
 
 import io.netty.channel.Channel;
 
-public class InboxMessage extends LocalMessage {
+public class InboxMessage extends PeerMessage {
 
 	private Channel channel;
 	
@@ -14,4 +14,8 @@ public class InboxMessage extends LocalMessage {
 		this.channel = channel;
 	}
 	
+	@Override
+	public String toString() {
+		return super.toString();
+	}	
 }

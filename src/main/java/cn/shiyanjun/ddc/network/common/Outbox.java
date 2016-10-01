@@ -14,6 +14,7 @@ public class Outbox extends MessageBox<OutboxMessage> {
 	
 	public Outbox(Context context, MessageDispatcher dispatcher) {
 		super(context, dispatcher);
+		name = "OUTBOX";
 		LOG.info("RPC configurations:");
 		String key = RpcConstants.RPC_ASK_RETRY_TIMES;
 		this.askRetryTimes = context.getInt(key, 0);
@@ -22,22 +23,23 @@ public class Outbox extends MessageBox<OutboxMessage> {
 		key = RpcConstants.RPC_ASK_TIMEOUT;
 		this.askTimeout = context.getInt(key, 30000);
 		LOG.info(key + "\t=\t" + askTimeout);
-		
-		final Thread sender = new Sender();
-		sender.start();
 	}
 	
-	private class Sender extends Thread {
-		
-		@Override
-		public void run() {
-			while(true) {
-				OutboxMessage message = null;
-				try {
-					message = messageBox.take();
-					if(message != null) {
-						message.getChannel().writeAndFlush(message.getRpcMessage());
-						LOG.debug("Rpc message sent: rpcMessage=" + message.getRpcMessage());
+	@Override
+	public void start() {
+		super.start();
+		super.getExecutorService().execute(this);
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			OutboxMessage message = null;
+			try {
+				message = messageBox.take();
+				if(message != null) {
+					message.getChannel().writeAndFlush(message.getRpcMessage());
+					LOG.debug("Rpc message sent: rpcMessage=" + message.getRpcMessage());
 //						int timeout = askTimeout;
 //						if(message.getTimeoutMillis() > 0) {
 //							timeout = message.getTimeoutMillis();
@@ -59,16 +61,16 @@ public class Outbox extends MessageBox<OutboxMessage> {
 //								continue;
 //							}
 //						}
-					}
-				} catch (Exception e) {
-					LOG.warn("Fail to send message: " + message, e);
-					if(message != null) {
+				}
+			} catch (Exception e) {
+				LOG.warn("Fail to send message: " + message, e);
+				if(message != null) {
 //						SentAckMessage ack = new SentAckMessage(message);
 //						ack.setMessageStatus(MessageStatus.FAILURE);
 //						dispatcher.dispatch(ack);
-					}
 				}
 			}
 		}
 	}
+		
 }

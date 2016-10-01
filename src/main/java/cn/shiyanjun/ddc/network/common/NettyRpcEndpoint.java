@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.api.common.AbstractEndpoint;
+import cn.shiyanjun.ddc.api.utils.Pair;
 import cn.shiyanjun.ddc.api.utils.ReflectionUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -21,7 +22,7 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 
 	private static final Log LOG = LogFactory.getLog(NettyRpcEndpoint.class);
-	private final List<ChannelHandler> channelHandlers = Lists.newArrayList();
+	private final List<Pair<Class<? extends ChannelHandler>, Object[]>> registeredchannelHandlerClasses = Lists.newArrayList();
 	protected final EventLoopGroup workerGroup;
 	
 	public NettyRpcEndpoint(Context context) {
@@ -35,20 +36,23 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 	
 	protected ChannelHandler newChannelInitializer() {
 		return new ChannelInitializer<Channel>() { 
+			
 			@Override
 			public void initChannel(Channel ch) throws Exception {
-				for(final ChannelHandler handler : channelHandlers) {
+				ch.pipeline().addLast(new ObjectDecoder(Class::forName));
+				for(Pair<Class<? extends ChannelHandler>, Object[]> clazz : registeredchannelHandlerClasses) {
+					ChannelHandler handler = ReflectionUtils.newInstance(clazz.getKey(), ChannelHandler.class, clazz.getValue());
 					ch.pipeline().addLast(handler);
+					LOG.info("Channel handler pipelined: handler=" + handler);
 				}
+				ch.pipeline().addLast(new ObjectEncoder());
 			}
 		};
 	}
 	
-	public void addChannelHandlers(ChannelHandler... handlers) {
-		for(ChannelHandler h : handlers) {
-			channelHandlers.add(h);
-			LOG.info("Channel handler added: " + h.getClass().getName());
-		}
+	public void addChannelHandlerClass(Pair<Class<? extends ChannelHandler>, Object[]> clazzWithParameters) {
+		registeredchannelHandlerClasses.add(clazzWithParameters);
+		LOG.info("Channel handler added: clazz=" + clazzWithParameters.getKey().getName());
 	}
 	
 	@Override
@@ -68,13 +72,15 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 	 * @param rpcMessageHandler
 	 * @return
 	 */
-	public static NettyRpcEndpoint newEndpoint(Class<? extends NettyRpcEndpoint> endpointClass, Context context, RpcMessageHandler rpcMessageHandler) {
+	public static NettyRpcEndpoint newEndpoint(
+			Context context, 
+			Class<? extends NettyRpcEndpoint> endpointClass, 
+			List<Pair<Class<? extends ChannelHandler>, Object[]>> channelHandlerClasses) {
 		final NettyRpcEndpoint endpoint = ReflectionUtils.newInstance(endpointClass, NettyRpcEndpoint.class, context);
 		// configure Netty endpoint
-		endpoint.addChannelHandlers(
-				new ObjectDecoder(Class::forName), 
-				rpcMessageHandler, 
-				new ObjectEncoder());
+		for(Pair<Class<? extends ChannelHandler>, Object[]> clazz : channelHandlerClasses) {
+			endpoint.addChannelHandlerClass(clazz);
+		}
 		return endpoint;
 	}
 
