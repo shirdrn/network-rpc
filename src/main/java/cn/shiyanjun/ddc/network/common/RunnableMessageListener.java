@@ -17,7 +17,7 @@ public abstract class RunnableMessageListener<T> implements MessageListener<T>, 
 	private final BlockingQueue<T> q = Queues.newLinkedBlockingQueue();
 	private final Set<Integer> messageTypes = Sets.newHashSet();;
 	
-	public RunnableMessageListener(int... messageTypes) {
+	public RunnableMessageListener(Integer... messageTypes) {
 		for(int messageType : messageTypes) {
 			this.messageTypes.add(messageType);
 		}

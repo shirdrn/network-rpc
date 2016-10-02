@@ -33,7 +33,7 @@ public final class Inbox extends MessageBox<InboxMessage> {
 				message = messageBox.take();
 				if(message != null) {
 					dispatcher.dispatch(message);
-					LOG.debug("Message distatched: dispatcher=" + dispatcher.getClass().getName() + ", message=" + message);
+					LOG.debug("Message dispatched: dispatcher=" + dispatcher.getClass().getName() + ", message=" + message);
 				}
 			} catch (Exception e) {
 				LOG.warn("Fail to dispatch message: " + message, e);
