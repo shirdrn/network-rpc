@@ -12,6 +12,7 @@ import cn.shiyanjun.ddc.api.common.AbstractEndpoint;
 import cn.shiyanjun.ddc.api.utils.Pair;
 import cn.shiyanjun.ddc.api.utils.ReflectionUtils;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -24,6 +25,7 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 	private static final Log LOG = LogFactory.getLog(NettyRpcEndpoint.class);
 	private final List<Pair<Class<? extends ChannelHandler>, Object[]>> registeredchannelHandlerClasses = Lists.newArrayList();
 	protected final EventLoopGroup workerGroup;
+	protected ChannelFuture bindOrConnectChannelFuture;
 	
 	public NettyRpcEndpoint(Context context) {
 		super(context);
@@ -63,6 +65,10 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 			LOG.warn("Catch exception when worker group being shutdown:", e);
 		}
 		
+	}
+	
+	public void await() throws InterruptedException {
+		bindOrConnectChannelFuture.channel().closeFuture().sync();
 	}
 	
 	/**

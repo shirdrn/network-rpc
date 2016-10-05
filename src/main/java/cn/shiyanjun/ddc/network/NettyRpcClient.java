@@ -10,7 +10,6 @@ import cn.shiyanjun.ddc.api.network.MessageListener;
 import cn.shiyanjun.ddc.network.common.NettyRpcEndpoint;
 import cn.shiyanjun.ddc.network.common.RpcMessage;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
@@ -39,14 +38,11 @@ public class NettyRpcClient extends NettyRpcEndpoint {
 				.handler(super.newChannelInitializer());
 
 			// Connect to the server
-			ChannelFuture f = b.connect(
+			bindOrConnectChannelFuture = b.connect(
 					super.getSocketAddress().getHostName(), 
 					super.getSocketAddress().getPort()
 				).sync(); 
 			LOG.info("Netty client started!");
-			
-			// Wait until the connection is closed.
-            f.channel().closeFuture().sync();
 		} catch (Exception e) {
 			LOG.warn("Fail to start Netty RPC client:", e);
 			Throwables.propagate(e);
