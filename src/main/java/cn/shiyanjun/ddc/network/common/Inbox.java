@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.shiyanjun.ddc.api.Context;
+import cn.shiyanjun.ddc.network.api.MessageDispatcher;
 
 public final class Inbox extends MessageBox<InboxMessage> {
 

@@ -16,6 +16,7 @@ import com.google.common.collect.Sets;
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.api.common.AbstractComponent;
 import cn.shiyanjun.ddc.api.utils.NamedThreadFactory;
+import cn.shiyanjun.ddc.network.api.MessageDispatcher;
 
 public abstract class AbstractMessageDispatcher extends AbstractComponent implements MessageDispatcher {
 
@@ -23,7 +24,6 @@ public abstract class AbstractMessageDispatcher extends AbstractComponent implem
 	private final ConcurrentMap<Integer, RunnableMessageListener<PeerMessage>> typedListeners = Maps.newConcurrentMap();
 	private final ConcurrentMap<RunnableMessageListener<PeerMessage>, Set<Integer>> listenerToTypeSet = Maps.newConcurrentMap();
 	private ExecutorService executorService;
-	private RpcService rpcService;
 	
 	public AbstractMessageDispatcher(Context context) {
 		super(context);
@@ -59,16 +59,6 @@ public abstract class AbstractMessageDispatcher extends AbstractComponent implem
 		}
 	}
 	
-	@Override
-	public void setRpcService(RpcService rpcService) {
-		this.rpcService = rpcService;		
-	}
-	
-	@Override
-	public RpcService getRpcService() {
-		return rpcService;
-	}
-	@Override
 	public RunnableMessageListener<PeerMessage> getMessageListener(int messageType) {
 		return typedListeners.get(messageType);
 	}

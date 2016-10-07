@@ -8,8 +8,9 @@ import com.google.common.base.Throwables;
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.api.LifecycleAware;
 import cn.shiyanjun.ddc.api.common.AbstractComponent;
-import cn.shiyanjun.ddc.api.network.RpcAskService;
-import cn.shiyanjun.ddc.api.network.RpcReceiveService;
+import cn.shiyanjun.ddc.network.api.MessageDispatcher;
+import cn.shiyanjun.ddc.network.api.RpcAskService;
+import cn.shiyanjun.ddc.network.api.RpcReceiveService;
 import io.netty.channel.Channel;
 
 public abstract class RpcService extends AbstractComponent implements RpcAskService<PeerMessage>, RpcReceiveService<Channel, RpcMessage>, LifecycleAware {

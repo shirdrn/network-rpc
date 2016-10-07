@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 
-import cn.shiyanjun.ddc.api.network.MessageListener;
+import cn.shiyanjun.ddc.network.api.MessageListener;
 
 public abstract class RunnableMessageListener<T> implements MessageListener<T>, Runnable {
 

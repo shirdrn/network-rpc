@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import com.google.common.base.Throwables;
 
 import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.network.MessageListener;
+import cn.shiyanjun.ddc.network.api.MessageListener;
 import cn.shiyanjun.ddc.network.common.NettyRpcEndpoint;
 import cn.shiyanjun.ddc.network.common.RpcMessage;
 import io.netty.bootstrap.Bootstrap;

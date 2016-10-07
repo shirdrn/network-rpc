@@ -10,6 +10,7 @@ import com.google.common.collect.Queues;
 import cn.shiyanjun.ddc.api.Context;
 import cn.shiyanjun.ddc.api.LifecycleAware;
 import cn.shiyanjun.ddc.api.utils.NamedThreadFactory;
+import cn.shiyanjun.ddc.network.api.MessageDispatcher;
 
 public abstract class MessageBox<M> implements LifecycleAware, Runnable {
 

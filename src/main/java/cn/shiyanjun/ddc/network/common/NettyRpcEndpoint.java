@@ -8,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import com.google.common.collect.Lists;
 
 import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.common.AbstractEndpoint;
 import cn.shiyanjun.ddc.api.utils.Pair;
 import cn.shiyanjun.ddc.api.utils.ReflectionUtils;
 import io.netty.channel.Channel;

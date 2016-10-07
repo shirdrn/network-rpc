@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.shiyanjun.ddc.api.Context;
+import cn.shiyanjun.ddc.network.api.MessageDispatcher;
 import cn.shiyanjun.ddc.network.constants.RpcConstants;
 
 public class Outbox extends MessageBox<OutboxMessage> {
