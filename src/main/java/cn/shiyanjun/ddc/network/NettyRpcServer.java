@@ -24,24 +24,26 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class NettyRpcServer extends NettyRpcEndpoint {
 	
 	private static final Log LOG = LogFactory.getLog(NettyRpcServer.class);
-	private final EventLoopGroup bossGroup;
-	private final ServerBootstrap b = new ServerBootstrap();
+	private EventLoopGroup bossGroup;
+	private ServerBootstrap b;
 	
 	public NettyRpcServer(Context context) {
 		super(context);
-		bossGroup = super.newEventLoopGroup(1);
 	}
 
 	@Override
 	public void start() {
+		super.start();
 		try {
+			b = new ServerBootstrap();
+			bossGroup = super.newEventLoopGroup(1);
 			b.group(bossGroup, workerGroup)
 				.channel(NioServerSocketChannel.class) 
 				.childHandler(super.newChannelInitializer())
 				.option(ChannelOption.SO_BACKLOG, 128) 
 				.childOption(ChannelOption.SO_KEEPALIVE, true);
 
-			// Bind and start to accept incoming connections.
+			// Bind & start to accept incoming connections
 			bindOrConnectChannelFuture = b.bind(super.getSocketAddress().getPort()).sync(); 
 			LOG.info("Netty server started!");
 		} catch (Exception e) {

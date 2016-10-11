@@ -23,12 +23,26 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 
 	private static final Log LOG = LogFactory.getLog(NettyRpcEndpoint.class);
 	private final List<Pair<Class<? extends ChannelHandler>, Object[]>> registeredchannelHandlerClasses = Lists.newArrayList();
-	protected final EventLoopGroup workerGroup;
+	protected EventLoopGroup workerGroup;
 	protected ChannelFuture bindOrConnectChannelFuture;
 	
 	public NettyRpcEndpoint(Context context) {
 		super(context);
-		this.workerGroup = newEventLoopGroup(1);
+	}
+	
+	@Override
+	public void start() {
+		workerGroup = newEventLoopGroup(1);		
+	}
+	
+	@Override
+	public void stop() {
+		try {
+			workerGroup.shutdownGracefully().sync();
+		} catch (InterruptedException e) {
+			LOG.warn("Catch exception when worker group being shutdown:", e);
+		}
+		
 	}
 	
 	protected EventLoopGroup newEventLoopGroup(int nThreads) {
@@ -54,16 +68,6 @@ public abstract class NettyRpcEndpoint extends AbstractEndpoint<RpcMessage> {
 	public void addChannelHandlerClass(Pair<Class<? extends ChannelHandler>, Object[]> clazzWithParameters) {
 		registeredchannelHandlerClasses.add(clazzWithParameters);
 		LOG.info("Channel handler added: clazz=" + clazzWithParameters.getKey().getName());
-	}
-	
-	@Override
-	public void stop() {
-		try {
-			workerGroup.shutdownGracefully().sync();
-		} catch (InterruptedException e) {
-			LOG.warn("Catch exception when worker group being shutdown:", e);
-		}
-		
 	}
 	
 	public void await() throws InterruptedException {

@@ -23,7 +23,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 public class NettyRpcClient extends NettyRpcEndpoint {
 
 	private static final Log LOG = LogFactory.getLog(NettyRpcClient.class);
-	private final  Bootstrap b = new Bootstrap();
+	private Bootstrap b;
 	
 	public NettyRpcClient(Context context) {
 		super(context);
@@ -31,7 +31,9 @@ public class NettyRpcClient extends NettyRpcEndpoint {
 
 	@Override
 	public void start() {
+		super.start();
 		try {
+			b = new Bootstrap();
 			b.group(workerGroup)
 				.channel(NioSocketChannel.class)
 				.option(ChannelOption.SO_KEEPALIVE, true)
