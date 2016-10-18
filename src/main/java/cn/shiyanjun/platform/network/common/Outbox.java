@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -6,9 +6,9 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.network.api.MessageDispatcher;
-import cn.shiyanjun.ddc.network.constants.RpcConstants;
+import cn.shiyanjun.platform.api.Context;
+import cn.shiyanjun.platform.network.api.MessageDispatcher;
+import cn.shiyanjun.platform.network.constants.RpcConstants;
 import io.netty.channel.ChannelFuture;
 
 public class Outbox extends MessageBox<OutboxMessage> {

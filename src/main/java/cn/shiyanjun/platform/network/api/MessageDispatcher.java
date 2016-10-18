@@ -1,8 +1,8 @@
-package cn.shiyanjun.ddc.network.api;
+package cn.shiyanjun.platform.network.api;
 
-import cn.shiyanjun.ddc.api.LifecycleAware;
-import cn.shiyanjun.ddc.network.common.PeerMessage;
-import cn.shiyanjun.ddc.network.common.RunnableMessageListener;
+import cn.shiyanjun.platform.api.LifecycleAware;
+import cn.shiyanjun.platform.network.common.PeerMessage;
+import cn.shiyanjun.platform.network.common.RunnableMessageListener;
 
 public interface MessageDispatcher extends LifecycleAware {
 

@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Queues;
 
-import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.LifecycleAware;
-import cn.shiyanjun.ddc.api.utils.NamedThreadFactory;
-import cn.shiyanjun.ddc.network.api.MessageDispatcher;
+import cn.shiyanjun.platform.api.Context;
+import cn.shiyanjun.platform.api.LifecycleAware;
+import cn.shiyanjun.platform.api.utils.NamedThreadFactory;
+import cn.shiyanjun.platform.network.api.MessageDispatcher;
 
 public abstract class MessageBox<M> implements LifecycleAware, Runnable {
 

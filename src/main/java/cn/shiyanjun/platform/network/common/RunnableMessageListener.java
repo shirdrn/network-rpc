@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 
-import cn.shiyanjun.ddc.network.api.MessageListener;
+import cn.shiyanjun.platform.network.api.MessageListener;
 
 public abstract class RunnableMessageListener<T> implements MessageListener<T>, Runnable {
 

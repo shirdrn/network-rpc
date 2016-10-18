@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -13,10 +13,10 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.common.AbstractComponent;
-import cn.shiyanjun.ddc.api.utils.NamedThreadFactory;
-import cn.shiyanjun.ddc.network.api.MessageDispatcher;
+import cn.shiyanjun.platform.api.Context;
+import cn.shiyanjun.platform.api.common.AbstractComponent;
+import cn.shiyanjun.platform.api.utils.NamedThreadFactory;
+import cn.shiyanjun.platform.network.api.MessageDispatcher;
 
 public abstract class AbstractMessageDispatcher extends AbstractComponent implements MessageDispatcher {
 

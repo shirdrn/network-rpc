@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.api;
+package cn.shiyanjun.platform.network.api;
 
 public interface RpcReceiveService<C, M> {
 

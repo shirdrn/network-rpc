@@ -1,8 +1,8 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import java.io.Serializable;
 
-import cn.shiyanjun.ddc.network.api.Message;
+import cn.shiyanjun.platform.network.api.Message;
 
 public abstract class AbstractMessage<T> implements Message<T>, Serializable {
 

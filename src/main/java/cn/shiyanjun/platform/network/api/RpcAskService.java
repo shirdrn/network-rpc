@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.api;
+package cn.shiyanjun.platform.network.api;
 
 /**
  * Protocol for sending messages with type <code>REQ</code>.

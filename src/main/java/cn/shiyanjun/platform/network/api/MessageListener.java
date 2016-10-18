@@ -1,6 +1,6 @@
-package cn.shiyanjun.ddc.network.api;
+package cn.shiyanjun.platform.network.api;
 
-import cn.shiyanjun.ddc.api.LifecycleAware;
+import cn.shiyanjun.platform.api.LifecycleAware;
 
 /**
  * In-bound messages require to be handled by the 

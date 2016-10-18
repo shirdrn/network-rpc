@@ -1,11 +1,11 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import java.net.InetSocketAddress;
 
-import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.common.AbstractComponent;
-import cn.shiyanjun.ddc.network.api.RpcEndpoint;
-import cn.shiyanjun.ddc.network.constants.RpcConfigKeys;
+import cn.shiyanjun.platform.api.Context;
+import cn.shiyanjun.platform.api.common.AbstractComponent;
+import cn.shiyanjun.platform.network.api.RpcEndpoint;
+import cn.shiyanjun.platform.network.constants.RpcConfigKeys;
 
 public abstract class AbstractEndpoint<M> extends AbstractComponent implements RpcEndpoint {
 

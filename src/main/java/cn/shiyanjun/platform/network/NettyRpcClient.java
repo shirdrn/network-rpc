@@ -1,14 +1,14 @@
-package cn.shiyanjun.ddc.network;
+package cn.shiyanjun.platform.network;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Throwables;
 
-import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.network.api.MessageListener;
-import cn.shiyanjun.ddc.network.common.NettyRpcEndpoint;
-import cn.shiyanjun.ddc.network.common.RpcMessage;
+import cn.shiyanjun.platform.api.Context;
+import cn.shiyanjun.platform.network.api.MessageListener;
+import cn.shiyanjun.platform.network.common.NettyRpcEndpoint;
+import cn.shiyanjun.platform.network.common.RpcMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.nio.NioSocketChannel;

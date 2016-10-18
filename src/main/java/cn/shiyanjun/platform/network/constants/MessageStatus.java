@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.constants;
+package cn.shiyanjun.platform.network.constants;
 
 public enum MessageStatus {
 

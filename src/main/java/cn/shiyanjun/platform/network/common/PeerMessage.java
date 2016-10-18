@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import com.google.common.base.Preconditions;
 

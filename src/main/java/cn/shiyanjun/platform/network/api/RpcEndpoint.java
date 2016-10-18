@@ -1,8 +1,8 @@
-package cn.shiyanjun.ddc.network.api;
+package cn.shiyanjun.platform.network.api;
 
 import java.net.InetSocketAddress;
 
-import cn.shiyanjun.ddc.api.LifecycleAware;
+import cn.shiyanjun.platform.api.LifecycleAware;
 
 /**
  * RPC endpoint for Server or Client.

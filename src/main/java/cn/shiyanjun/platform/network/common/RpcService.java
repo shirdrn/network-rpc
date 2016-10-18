@@ -1,16 +1,16 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Throwables;
 
-import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.LifecycleAware;
-import cn.shiyanjun.ddc.api.common.AbstractComponent;
-import cn.shiyanjun.ddc.network.api.MessageDispatcher;
-import cn.shiyanjun.ddc.network.api.RpcAskService;
-import cn.shiyanjun.ddc.network.api.RpcReceiveService;
+import cn.shiyanjun.platform.api.Context;
+import cn.shiyanjun.platform.api.LifecycleAware;
+import cn.shiyanjun.platform.api.common.AbstractComponent;
+import cn.shiyanjun.platform.network.api.MessageDispatcher;
+import cn.shiyanjun.platform.network.api.RpcAskService;
+import cn.shiyanjun.platform.network.api.RpcReceiveService;
 import io.netty.channel.Channel;
 
 public abstract class RpcService extends AbstractComponent implements RpcAskService<PeerMessage>, RpcReceiveService<Channel, RpcMessage>, LifecycleAware {

@@ -1,4 +1,4 @@
-package cn.shiyanjun.ddc.network.common;
+package cn.shiyanjun.platform.network.common;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.common.collect.Lists;
 
-import cn.shiyanjun.ddc.api.Context;
-import cn.shiyanjun.ddc.api.utils.Pair;
-import cn.shiyanjun.ddc.api.utils.ReflectionUtils;
+import cn.shiyanjun.platform.api.Context;
+import cn.shiyanjun.platform.api.utils.Pair;
+import cn.shiyanjun.platform.api.utils.ReflectionUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
